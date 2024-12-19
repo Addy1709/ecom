@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products Table</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="mb-4">Products List</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+            <tbody id="productTableBody">
+                <!-- Product rows will be inserted here dynamically -->
+            </tbody>
+        </table>
+    </div>
+ 
+    <script>
+        // Replace this with your actual token
+        const token = `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOm51bGwsImlhdCI6MTczMjI5MjI5MSwiZXhwIjoxNzMyMzI4MjkxfQ.ymMgk05fH94A3R_3KjM2yDgRaibg8yd-a4htaCLJ8Qo`;
+
+        // Fetch the products data from the API
+        fetch("http://localhost:3200/api/products", {
+            headers: {
+                "Authorization": token,
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Network response was not ok " + response.statusText);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log("Fetched data:", data); // Debugging: Log the data to check structure
+            const productTableBody = document.getElementById("productTableBody");
+            // Check if 'data' is an array or has an array property
+            const products = Array.isArray(data) ? data : data.products;
+            
+            products.forEach(product => {
+                // Create a new row for each product
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${product.id}</td>
+                    <td>${product.name}</td>
+                    <td>${product.desc}</td>
+                    <td>${product.price}</td>
+                `;
+                // Append the row to the table body
+                productTableBody.appendChild(row);
+            });
+        })
+        .catch(error => {
+            console.error("There was an error fetching the products:", error);
+            const productTableBody = document.getElementById("productTableBody");
+            productTableBody.innerHTML = '<tr><td colspan="4">Failed to load products. Please try again later.</td></tr>';
+        });
+    </script>
+</body>
+</html>

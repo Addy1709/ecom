@@ -1,0 +1,10 @@
+place order:
+get the cart items of user and calculate the amount
+create a collection fro 'orders'
+reduce the quantity of product when ordered cart.pop()
+clear the cart 
+
+///more steps like payments 
+
+
+// do this or do none 

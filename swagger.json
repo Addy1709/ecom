@@ -1,0 +1,279 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "description": "API for ECOM APP",
+        "title": "ECOM APP"
+    },
+    "host": "localhost:3200",
+    "securityDefinitions": {
+        "JWT": {
+            "in": "header",
+            "name": "Authorization",
+            "type": "apiKey"
+        }
+    },
+    "paths": {
+        "/api/products": {
+            "get": {
+                "tags": ["products"],
+                "summary": "Get all products",
+                "description": "Get all products",
+                "security": [{"JWT": {}}],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Unauthorized"
+                    }
+                }
+            }
+        },
+        "/api/users/signin": {
+            "post": {
+                "tags": ["users"],
+                "summary": "Login",
+                "description": "Users login to get token",
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "User credentials",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "email": {
+                                    "type": "string"
+                                },
+                                "pass": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Invalid credentials"
+                    }
+                }
+            }
+        },
+        "/api/users/signup": {
+            "post": {
+                "tags": ["users"],
+                "summary": "Signup",
+                "description": "User signup to create a new account",
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "User details for signup",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "name": {
+                                    "type": "string",
+                                    "example": "John Doe"
+                                },
+                                "email": {
+                                    "type": "string",
+                                    "example": "john.doe@example.com"
+                                },
+                                "pass": {
+                                    "type": "string",
+                                    "example": "password123"
+                                }
+                            },
+                            "required": ["name", "email", "password"]
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "User created successfully",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "message": {
+                                    "type": "string",
+                                    "example": "User registered successfully"
+                                },
+                                "user": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string",
+                                            "example": "64b45bc17d71f1ec9c3f3c45"
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "John Doe"
+                                        },
+                                        "email": {
+                                            "type": "string",
+                                            "example": "john.doe@example.com"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input - User already exists or invalid email format",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "error": {
+                                    "type": "string",
+                                    "example": "User already exists or invalid email format"
+                                },
+                                "code": {
+                                    "type": "integer",
+                                    "example": 400
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error - Could not create user",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "error": {
+                                    "type": "string",
+                                    "example": "An error occurred while creating the user"
+                                },
+                                "code": {
+                                    "type": "integer",
+                                    "example": 500
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/products/rate": {
+            "get": {
+                "tags": ["Rate"],
+                "summary": "Rate a product",
+                "description": "Allows user to rate a product using query parameters",
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "query",
+                        "description": "ID of the user who rates the product",
+                        "required": true,
+                        "type": "integer",
+                        "example": 1
+                    },
+                    {
+                        "name": "prodId",
+                        "in": "query",
+                        "description": "ID of the product being rated",
+                        "required": true,
+                        "type": "integer",
+                        "example": 1
+                    },
+                    {
+                        "name": "rating",
+                        "in": "query",
+                        "description": "Rating given (1 to 5)",
+                        "required": true,
+                        "type": "integer",
+                        "example": 5
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Rated successfully",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "message": {
+                                    "type": "string",
+                                    "example": "Rating submitted successfully"
+                                },
+                                "userId": {
+                                    "type": "integer",
+                                    "example": 1
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request - Invalid input",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "error": {
+                                    "type": "string",
+                                    "example": "Invalid rating value"
+                                },
+                                "code": {
+                                    "type": "integer",
+                                    "example": 400
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error - Unexpected issue",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "error": {
+                                    "type": "string",
+                                    "example": "Unable to process the request due to server error"
+                                },
+                                "code": {
+                                    "type": "integer",
+                                    "example": 500
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/products/filter": {
+            "get": {
+                "tags": ["Filter"],
+                "summary": "Filter products",
+                "description": "Allows user to filter products based on criteria",
+                "parameters": [
+                    {
+                        "name": "minprice",
+                        "in": "query",
+                        "description": "Minimum price limit",
+                        "required": true,
+                        "type": "integer",
+                        "example": 1
+                    },
+                    {
+                        "name": "maxprice",
+                        "in": "query",
+                        "description": "Maximum price limit",
+                        "required": true,
+                        "type": "integer",
+                        "example": 100
+                    },
+                    {
+                        "name": "rating",
+                        "in": "query",
+                        "description": "Minimum rating (1 to 5)",
+                        "required": true,
+                        "type": "integer",
+                        "example": 4
+                    }
+                ]
+            }
+        }
+    }
+}
